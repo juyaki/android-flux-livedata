@@ -23,19 +23,21 @@ interface StoreType<S : State> {
 }
 
 class Store<S : State>(
-    initialState: S,
-    private val reducer: Reducer<S>
+        initialState: S,
+        private val reducer: Reducer<S>
 ) : StoreType<S> {
 
     override val state: MutableLiveData<S> = MutableLiveData<S>().apply { value = initialState }
 
-    private val middlewares = mutableListOf<Middleware<S>>()
+    private val middlewares: MutableList<Middleware<S>> = mutableListOf()
 
     override fun dispatch(action: Action) {
         state.value?.let { currentState ->
             middlewares.onEach { it.performBeforeReducingState(currentState, action) }
-            val nextState = reducer.reduce(currentState, action).also { state.value = it }
-            middlewares.onEach { it.performAfterReducingState(nextState, action) }
+            reducer.reduce(currentState, action).also { newState ->
+                state.value = newState
+                middlewares.onEach { it.performAfterReducingState(newState, action) }
+            }
         }
     }
 
