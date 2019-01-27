@@ -1,16 +1,17 @@
-package com.app.pjulien.reduxlivedata
+package com.app.pjulien.reduxlivedata.counter
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.app.pjulien.reduxlivedata.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class CounterActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    private val viewModel: CounterViewModel by lazy {
+        ViewModelProviders.of(this).get(CounterViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

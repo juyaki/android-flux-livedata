@@ -1,4 +1,6 @@
-package com.app.pjulien.reduxlivedata
+package com.app.pjulien.reduxlivedata.counter
+
+import com.app.pjulien.reduxlivedata.Action
 
 sealed class MainAction : Action
 
