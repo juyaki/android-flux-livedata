@@ -32,12 +32,11 @@ class Store<S : State>(
     private val middlewares: MutableList<Middleware<S>> = mutableListOf()
 
     override fun dispatch(action: Action) {
-        state.value?.let { currentState ->
-            middlewares.onEach { it.performBeforeReducingState(currentState, action) }
-            reducer.reduce(currentState, action).also { newState ->
-                state.value = newState
-                middlewares.onEach { it.performAfterReducingState(newState, action) }
-            }
+        val currentState = state.value ?: return
+        middlewares.onEach { it.performBeforeReducingState(currentState, action) }
+        reducer.reduce(currentState, action).also { newState ->
+            state.value = newState
+            middlewares.onEach { it.performAfterReducingState(newState, action) }
         }
     }
 
