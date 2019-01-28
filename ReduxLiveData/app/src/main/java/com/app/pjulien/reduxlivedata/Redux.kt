@@ -6,8 +6,8 @@ interface Action
 
 interface State
 
-interface Reducer<S : State> {
-    fun reduce(currentState: S, action: Action): S
+interface Reducer<S : State, A : Action> {
+    fun reduce(currentState: S, action: A): S
 }
 
 interface Middleware<S : State> {
@@ -15,23 +15,23 @@ interface Middleware<S : State> {
     fun performAfterReducingState(newState: S, action: Action)
 }
 
-interface StoreType<S : State> {
+interface StoreType<S : State, A : Action> {
     val state: MutableLiveData<S>
-    fun dispatch(action: Action)
+    fun dispatch(action: A)
     fun addMiddleware(middleware: Middleware<S>): Boolean
     fun removeMiddleware(middleware: Middleware<S>): Boolean
 }
 
-class Store<S : State>(
+class Store<S : State, A : Action>(
         initialState: S,
-        private val reducer: Reducer<S>
-) : StoreType<S> {
+        private val reducer: Reducer<S, A>
+) : StoreType<S, A> {
 
     override val state: MutableLiveData<S> = MutableLiveData<S>().apply { value = initialState }
 
     private val middlewares: MutableList<Middleware<S>> = mutableListOf()
 
-    override fun dispatch(action: Action) {
+    override fun dispatch(action: A) {
         val currentState = state.value ?: return
         middlewares.onEach { it.performBeforeReducingState(currentState, action) }
         reducer.reduce(currentState, action).also { newState ->
