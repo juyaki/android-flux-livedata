@@ -32,9 +32,4 @@ class CounterActivity : AppCompatActivity() {
             decreaseButton.isEnabled = state.counter > 0
         })
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.store.state.removeObservers(this)
-    }
 }
